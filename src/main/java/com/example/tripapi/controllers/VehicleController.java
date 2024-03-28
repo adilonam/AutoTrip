@@ -1,3 +1,6 @@
+package com.example.tripapi.controllers;
+
+
 import com.example.tripapi.models.Vehicle;
 import com.example.tripapi.services.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,28 +11,28 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/vehicles")
 public class VehicleController {
 
     @Autowired
     private VehicleService vehicleService;
 
     // Endpoint to list all vehicles
-    @GetMapping("/vehicles")
+    @GetMapping
     public ResponseEntity<List<Vehicle>> getAllVehicles() {
         List<Vehicle> vehicles = vehicleService.getAllVehicles();
         return ResponseEntity.ok(vehicles);
     }
 
     // Endpoint to create a new vehicle
-    @PostMapping("/vehicles")
+    @PostMapping
     public ResponseEntity<Vehicle> createVehicle(@RequestBody Vehicle vehicle) {
         Vehicle newVehicle = vehicleService.createVehicle(vehicle);
         return ResponseEntity.status(HttpStatus.CREATED).body(newVehicle);
     }
 
     // Endpoint to create multiple vehicles
-    @PostMapping("/vehicles/batch")
+    @PostMapping("/batch")
     public ResponseEntity<List<Vehicle>> createVehiclesBatch(@RequestBody List<Vehicle> vehicles) {
         List<Vehicle> createdVehicles = vehicleService.createVehicles(vehicles);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdVehicles);
