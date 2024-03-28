@@ -11,4 +11,6 @@ public interface DriverService {
 
     // Method to create a new driver
     Driver createDriver(Driver driver);
+    List<Driver> createDrivers( List<Driver> drivers);
+
 }

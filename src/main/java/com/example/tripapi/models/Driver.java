@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.Date;
 
+import java.util.Set;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -29,7 +31,7 @@ public class Driver {
 
     private String CIN;
 
-    @OneToOne(mappedBy = "driver")
-    private DrivingLicense drivingLicense;
+    // @OneToOne(mappedBy = "driver")
+    // private DrivingLicense drivingLicense;
 
 }

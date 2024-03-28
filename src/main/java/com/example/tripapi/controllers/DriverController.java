@@ -10,23 +10,30 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/v1")
 public class DriverController {
 
     @Autowired
     private DriverService driverService;
 
     // Endpoint to list all drivers
-    @GetMapping("/drivers")
+    @GetMapping("/driver")
     public ResponseEntity<List<Driver>> getAllDrivers() {
         List<Driver> drivers = driverService.getAllDrivers();
         return ResponseEntity.ok(drivers);
     }
 
     // Endpoint to create a new driver
-    @PostMapping("/drivers")
+    @PostMapping("/driver")
     public ResponseEntity<Driver> createDriver(@RequestBody Driver driver) {
         Driver newDriver = driverService.createDriver(driver);
         return ResponseEntity.status(HttpStatus.CREATED).body(newDriver);
+    }
+
+    @PostMapping("/drivers")
+    public ResponseEntity<List<Driver>> createDrivers(@RequestBody List<Driver> drivers) {
+        List<Driver> createdDrivers = driverService.createDrivers(drivers);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdDrivers);
     }
 }
 
