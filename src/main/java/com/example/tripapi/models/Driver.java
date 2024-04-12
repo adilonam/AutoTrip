@@ -29,7 +29,7 @@ public class Driver {
 
     private Date dateOfBirth;
 
-    private String CIN;
+    private String cin;
 
     // @OneToOne(mappedBy = "driver")
     // private DrivingLicense drivingLicense;
