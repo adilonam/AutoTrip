@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tripapi.dtos.AuthenticationRequest;
 import com.example.tripapi.dtos.AuthenticationResponse;
+import com.example.tripapi.dtos.RefreshAuthenticationRequest;
 import com.example.tripapi.dtos.RegisterRequest;
 import com.example.tripapi.services.auth.AuthenticationService;
 
@@ -30,9 +31,8 @@ public class AuthenticationController {
 
 
   @PostMapping("/refresh-token")
-  public ResponseEntity<AuthenticationResponse> refreshToken(
-      HttpServletRequest request,
-      HttpServletResponse response
+  public ResponseEntity<AuthenticationResponse>  refreshToken(
+    @RequestBody RefreshAuthenticationRequest request
   )  {
    return ResponseEntity.ok(authenticationService.refreshToken(request));
   }

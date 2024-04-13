@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.example.tripapi.models.auth.Token;
+import com.example.tripapi.models.auth.User;
 
 public interface TokenRepository extends JpaRepository<Token, Integer> {
 
@@ -16,5 +17,8 @@ public interface TokenRepository extends JpaRepository<Token, Integer> {
       """)
   List<Token> findAllValidTokenByUser(Integer id);
 
+
+  @Query("select t from Token t where t.token = :token")
   Optional<Token> findByToken(String token);
+
 }

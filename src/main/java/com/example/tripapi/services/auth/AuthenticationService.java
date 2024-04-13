@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.tripapi.dtos.AuthenticationRequest;
 import com.example.tripapi.dtos.AuthenticationResponse;
+import com.example.tripapi.dtos.RefreshAuthenticationRequest;
 import com.example.tripapi.dtos.RegisterRequest;
 import com.example.tripapi.models.auth.Token;
 import com.example.tripapi.models.auth.TokenType;
@@ -14,6 +15,10 @@ import com.example.tripapi.models.auth.User;
 import com.example.tripapi.repositories.auth.TokenRepository;
 import com.example.tripapi.repositories.auth.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.Optional;
+
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -74,17 +79,12 @@ public class AuthenticationService {
 
 
       public AuthenticationResponse refreshToken(
-          HttpServletRequest request
+          RefreshAuthenticationRequest request
   )  {
 
-    final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-    final String refreshToken;
-    final String userEmail;
-    if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-     return null;
-    }
-    refreshToken = authHeader.substring(7);
-    userEmail = jwtService.extractUsername(refreshToken);
+  
+   var refreshToken = request.getRefreshToken();
+  var  userEmail = jwtService.extractUsername(refreshToken);
     if (userEmail != null) {
       var user = this.userRepository.findByEmail(userEmail)
               .orElseThrow();
@@ -114,14 +114,24 @@ public class AuthenticationService {
   }
 
   private void saveUserToken(User user, String jwtToken) {
-    var token = Token.builder()
-        .user(user)
-        .token(jwtToken)
-        .tokenType(TokenType.BEARER)
-        .expired(false)
-        .revoked(false)
-        .build();
-    tokenRepository.save(token);
-  }
+    try {
+        Token token = Token.builder()
+            .user(user)
+            .token(jwtToken)
+            .tokenType(TokenType.BEARER)
+            .expired(false)
+            .revoked(false)
+            .build();
+            
+        tokenRepository.save(token);
+    } catch (DataIntegrityViolationException e) {
+        // Handle the exception if a duplicate key error occurs
+        // E.g., Log the error, throw a custom exception, etc.
+        System.out.println("Error saving token: Token with the given key already exists.");
+        // Consider re-throwing or handling it accordingly.
+    }
+ 
+}
+
 
 }
