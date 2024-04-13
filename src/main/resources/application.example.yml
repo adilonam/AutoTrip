@@ -21,7 +21,7 @@ logging:
       springframework:
         security: DEBUG
 
-
+# app secret
 application:
   security:
     jwt:
