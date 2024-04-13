@@ -1,4 +1,4 @@
-package com.example.tripapi.models;
+package com.example.tripapi.models.auth;
 
 
 

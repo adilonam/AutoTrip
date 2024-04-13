@@ -1,6 +1,6 @@
 package com.example.tripapi.dtos;
 
-import com.example.tripapi.models.Role;
+import com.example.tripapi.models.auth.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
