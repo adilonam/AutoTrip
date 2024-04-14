@@ -6,6 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
@@ -19,6 +23,15 @@ public class DriverController {
     // Endpoint to list all drivers
     @GetMapping
     public ResponseEntity<List<Driver>> getAllDrivers() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof UsernamePasswordAuthenticationToken) {
+            UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
+            UserDetails userDetails = (UserDetails) token.getPrincipal();
+            String username = userDetails.getUsername();
+           System.out.println("********************************");
+           System.out.println(username);
+           System.out.println("********************************");
+        }
         List<Driver> drivers = driverService.getAllDrivers();
         return ResponseEntity.ok(drivers);
     }
