@@ -5,16 +5,21 @@ import java.security.Key;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.example.tripapi.repositories.auth.TokenRepository;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
+
 import java.util.function.Function;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Value;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
 
   @Value("${application.security.jwt.secret-key}")
@@ -23,6 +28,9 @@ public class JwtService {
   private long jwtExpiration;
   @Value("${application.security.jwt.refresh-token.expiration}")
   private long refreshExpiration;
+
+
+  private final TokenRepository tokenRepository;
 
     public String extractUsername(String token) {
       return extractClaim(token, Claims::getSubject);
@@ -50,8 +58,11 @@ public class JwtService {
 
 
   public boolean isTokenValid(String token, UserDetails userDetails) {
+    var isTokenValidRepository = tokenRepository.findByToken(token)
+          .map(t -> !t.isExpired() && !t.isRevoked())
+          .orElse(false);
     final String username = extractUsername(token);
-    return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    return (username.equals(userDetails.getUsername())) && !isTokenExpired(token) && isTokenValidRepository;
   }
 
   private boolean isTokenExpired(String token) {

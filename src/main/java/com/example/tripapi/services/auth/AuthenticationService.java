@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.tripapi.dtos.AuthenticationRequest;
 import com.example.tripapi.dtos.AuthenticationResponse;
+import com.example.tripapi.dtos.LogoutRequest;
+import com.example.tripapi.dtos.LogoutResponse;
 import com.example.tripapi.dtos.RefreshAuthenticationRequest;
 import com.example.tripapi.dtos.RegisterRequest;
 import com.example.tripapi.models.auth.Token;
@@ -102,6 +104,25 @@ public class AuthenticationService {
     return null;
   }
   
+
+
+
+  public LogoutResponse logout(
+          LogoutRequest request
+  )  {
+
+  
+   var accessToekn = request.getAccessToken();
+  var  userEmail = jwtService.extractUsername(accessToekn);
+  if (userEmail != null) {
+    var user = this.userRepository.findByEmail(userEmail)
+            .orElseThrow();
+            revokeAllUserTokens(user);
+  }
+    return LogoutResponse.builder()
+    .response("ok").build();
+  }
+  
   private void revokeAllUserTokens(User user) {
     var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
     if (validUserTokens.isEmpty())
@@ -112,6 +133,8 @@ public class AuthenticationService {
     });
     tokenRepository.saveAll(validUserTokens);
   }
+
+
 
   private void saveUserToken(User user, String jwtToken) {
     try {

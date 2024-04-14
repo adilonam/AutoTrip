@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tripapi.dtos.AuthenticationRequest;
 import com.example.tripapi.dtos.AuthenticationResponse;
+import com.example.tripapi.dtos.LogoutRequest;
+import com.example.tripapi.dtos.LogoutResponse;
 import com.example.tripapi.dtos.RefreshAuthenticationRequest;
 import com.example.tripapi.dtos.RegisterRequest;
 import com.example.tripapi.services.auth.AuthenticationService;
@@ -46,6 +48,11 @@ public class AuthenticationController {
   }
 
  
-
+  @PostMapping("/logout")
+  public ResponseEntity<LogoutResponse> logout(
+      @RequestBody LogoutRequest request
+  ) {
+    return ResponseEntity.ok(authenticationService.logout(request));
+  }
 
 }

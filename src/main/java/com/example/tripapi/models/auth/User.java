@@ -42,6 +42,10 @@ public class User implements UserDetails {
     return List.of(new SimpleGrantedAuthority(role.name()));
   }
 
+
+  @OneToMany(mappedBy = "user")
+  private List<Token> tokens;
+
   @Override
   public String getPassword() {
     return password;
